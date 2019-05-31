@@ -14,7 +14,7 @@ in order to provide details of your network and MQTT server
     The idea is to use a photoresistor to detect if there's an
     LED lit on the control panel.  This means the aircon is "on".
     (we can't use power-draw 'cos the aircon has ECO mode, so
-    it may be "on" but not drawing power.
+    it may be "on" but not drawing power.)
    
     We also have a IR transmittor.  So we can send the POWER
     message to remotely turn on/off the aircon.

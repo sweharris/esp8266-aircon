@@ -2,7 +2,7 @@
 // The idea is to use a photoresistor to detect if there's an
 // LED lit on the control panel.  This means the aircon is "on".
 // (we can't use power-draw 'cos the aircon has ECO mode, so
-// it may be "on" but not drawing power.
+// it may be "on" but not drawing power.)
 //
 // We also have a IR transmittor.  So we can send the POWER
 // message to remotely turn on/off the aircon.
@@ -19,7 +19,7 @@
 //  e.g  aircon/123456/status
 //       aircon/123456/control
 //       aircon/123456/debug
-////
+//
 // Uses PubSubClient and IRremoteESP8266 libraries on top of the ESP8266WiFi one
 //
 // On my NodeMCU
@@ -118,7 +118,7 @@ void log_msg(String msg)
 // This is called via the main loop when a message appears on the MQTT queue
 void callback(char* topic, byte* payload, unsigned int length)
 {
-  // Convert the message to a string.  We can use a simple constructor 'cos the
+  // Convert the message to a string.  We can't use a simple constructor 'cos the
   // byte array isn't null terminated
   String msg;
   for (int i = 0; i < length; i++)
