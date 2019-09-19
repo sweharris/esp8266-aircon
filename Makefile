@@ -5,7 +5,7 @@ SRC = $(wildcard *.ino)
 
 dummy: $(SRC)
 	@mkdir -p tmp
-	@TMPDIR=$(PWD)/tmp arduino-cli compile --fqbn=$(BOARD) --build-path=$(PWD)/build --build-cache-path=$(PWD)/cache
+	@TMPDIR=$(PWD)/tmp arduino-cli compile --fqbn=$(BOARD)
 	@rm -rf tmp
 	@touch dummy
 
