@@ -1,1 +1,6 @@
 network_conn.h
+build
+cache
+dummy
+esp8266-aircon.esp8266.esp8266.nodemcuv2.bin
+esp8266-aircon.esp8266.esp8266.nodemcuv2.elf
