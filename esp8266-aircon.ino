@@ -199,6 +199,11 @@ void setup()
   // Now we're on the network, setup the MQTT client
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
+
+#ifdef NETWORK_UPDATE
+    __setup_updater();
+#endif
+
 }
 
 
@@ -253,5 +258,10 @@ void loop()
     log_msg("Transition from " + state + " to " + new_state);
     state = new_state;
   }
+
+#ifdef NETWORK_UPDATE
+  __netupdateServer.handleClient();
+#endif
+
   delay(1000);
 }
