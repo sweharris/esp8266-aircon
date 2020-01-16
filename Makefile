@@ -1,4 +1,6 @@
+ifndef PORT
 PORT=/dev/ttyUSB0
+endif
 BOARD=esp8266:esp8266:nodemcuv2
 
 SRC = $(wildcard *.ino)
@@ -11,6 +13,8 @@ $(TARGET): $(SRC)
 	@mkdir -p tmp
 	@TMPDIR=$(PWD)/tmp arduino-cli compile --fqbn=$(BOARD)
 	@rm -rf tmp
+
+recompile: $(TARGET)
 
 netupload: $(TARGET)
 ifdef host
