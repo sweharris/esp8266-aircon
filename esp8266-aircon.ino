@@ -13,6 +13,8 @@
 //    POWER ON    (turn on aircon; only sends IR signal if state is OFF)
 //    POWER OFF   (turn off aircon; only sends IR signal if state is ON)
 //    POWER       (always send IR signal)
+//    UP          (increase temperature; eg from 74 to 75)
+//    DOWN        (decrase  temperature; eg from 73 to 73)
 //
 // The MQTT channels are based off the word "aircon" and the last 6 digits of the MAC
 //
@@ -89,12 +91,28 @@ IRsend irsend(D2);
 //  1694, 573, 1694, 573, 573, 573, 573, 573, 1694, 573, 573, 573, 1694, 573, 1694,
 //  573, 573, 573, 573, 573, 1694, 573, 1694, 573, 573, 573, 46560};
 
-// Friedrich Aircon.  Apparently PROTON  215 -1 11
-uint16_t POWER[] = {38, 7994, 3997, 500, 1499, 500, 1499, 500, 1499, 500, 500,
-                    500, 1499, 500, 500, 500, 1499, 500, 1499, 500, 3997, 500,
-                    1499, 500, 1499, 500, 500, 500, 1499, 500, 500, 500, 500,
-                    500, 500, 500, 500, 500, 20984
+// Friedrich Aircon.  Apparently PROTON  215
+// Power is OBC 11
+uint16_t POWER[] = {38, 8000, 4000, 500, 1500, 500, 1500, 500, 1500, 500, 500,
+                    500, 1500, 500, 500, 500, 1500, 500, 1500, 500, 3997, 500,
+                    1500, 500, 1500, 500, 500, 500, 1500, 500, 500, 500, 500,
+                    500, 500, 500, 500, 500, 30000
                    };
+
+// Temp up 4
+uint16_t TEMP_UP[] = {38, 8000, 4000, 500, 500, 500, 500, 500, 500, 500,
+                      500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+                      4000, 500, 500, 500, 500, 500, 1500, 500, 500, 500,
+                      500, 500, 500, 500, 500, 500, 500, 500, 30000
+                     };
+
+// Temp down 5
+uint16_t TEMP_DOWN[] = {38, 8000, 4000, 500, 500, 500, 500, 500, 500,
+                        500, 500, 500, 500, 500, 500, 500, 500, 500,
+                        500, 500, 4000, 500, 1500, 500, 500, 500, 1500,
+                        500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+                        500, 30000
+                       };
 
 void do_ir(uint16_t raw[])
 {
@@ -142,6 +160,16 @@ void callback(char* topic, byte* payload, unsigned int length)
   {
     log_msg("Toggling power");
     do_ir(POWER);
+  }
+  else if (msg == "DOWN")
+  {
+    log_msg("Temp down");
+    do_ir(TEMP_DOWN);
+  }
+  else if (msg == "UP")
+  {
+    log_msg("Temp up");
+    do_ir(TEMP_UP);
   }
   else
   {
