@@ -133,6 +133,9 @@ void log_msg(String msg)
   client.publish(mqttDebug, tm.c_str());
 }
 
+time_t lastmsg_time=0;
+String lastmsg="";
+
 // This is called via the main loop when a message appears on the MQTT queue
 void callback(char* topic, byte* payload, unsigned int length)
 {
@@ -144,6 +147,28 @@ void callback(char* topic, byte* payload, unsigned int length)
     msg += char(payload[i]);
   }
   log_msg("Message arrived [" + String(topic) + "] " + msg);
+
+  // Sometimes Alexa sends the same message twice.  I'm not sure why.
+  // For temperature up/down we have to live with it 'cos it's legitimate
+  // to send those signals twice quickly.
+  // But for power on/off messages we have a race condition where we may
+  // receive an OFF message, we send it, but not enough time hasn't passed
+  // so we still think the aircon is on.  So we send another power signal
+  // to the aircon and it turns on again!
+  // 
+  // So we ignore on/off messages if they occur too quickly.  Let's say
+  // two seconds.
+
+  time_t now = time(nullptr);
+
+  if ((msg == "POWER ON" || msg == "POWER OFF") && msg == lastmsg && now-lastmsg_time < 3)
+  {
+    log_msg("Ignoring duplicate " + msg);
+    return;
+  }
+
+  lastmsg=msg;
+  lastmsg_time=now;
 
   // Switch the LED on/off
   if (msg == "POWER ON" && state == "OFF")
